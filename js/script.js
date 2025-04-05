@@ -3,6 +3,7 @@
   $(".sakura-falling").sakura();
 })(jQuery);
 
+var url = "http://192.168.1.22:3060/v1";
 window.onload = function () {
   const input = document.getElementById("whatsappNumber");
   input.value = "+91";
@@ -72,12 +73,10 @@ function goToStep2() {
 
   axios
     .post(
-      `http://192.168.1.22/userInfo/${btoa(encodeURIComponent(number)).replace(
-        /=+$/,
-        ""
-      )}`
+      `${url}/userInfo/${btoa(encodeURIComponent(number)).replace(/=+$/, "")}`
     )
     .then((response) => {
+        console.log(response);
       const userData = response.data || {
         name: "Unknown User",
         about: "No about info available",
@@ -92,7 +91,7 @@ function goToStep2() {
       <h2>Is this you?</h2>
       <div class="profile-box">
         <img src="${userData.profileImage}" class="profile-img" />
-        <h3>${userData.name}</h3>
+        <!-- <h3>${userData.name}</h3> -->
         <p><strong>About:</strong> ${userData.about}</p>
         <p><strong>Number:</strong> ${userData.number}</p>
         <button onclick="confirmSubscription('${userData.number}')">Confirm</button>
@@ -122,9 +121,10 @@ function goToStep2() {
 function confirmSubscription(number) {
   axios
     .post(
-      `http://192.168.1.22/confirmSubscription/${btoa(
-        encodeURIComponent(number)
-      ).replace(/=+$/, "")}`
+      `${url}/confirmSubscription/${btoa(encodeURIComponent(number)).replace(
+        /=+$/,
+        ""
+      )}`
     )
     .then(() => {
       Toastify({
