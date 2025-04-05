@@ -3,7 +3,7 @@
   $(".sakura-falling").sakura();
 })(jQuery);
 
-const url = "https://472b-103-183-83-86.ngrok-free.app/v1";
+const url = "https://ready-typically-sunbird.ngrok-free.app/v1";
 
 window.onload = function () {
   const input = document.getElementById("whatsappNumber");
