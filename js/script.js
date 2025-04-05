@@ -3,32 +3,30 @@
   $(".sakura-falling").sakura();
 })(jQuery);
 
-var url = "http://192.168.1.22:3060/v1";
+const url = "https://472b-103-183-83-86.ngrok-free.app/v1";
+
 window.onload = function () {
   const input = document.getElementById("whatsappNumber");
   input.value = "+91";
 };
 
-window.onblur = function () {
-  var audio = document.getElementById("my_audio");
-  audio.pause();
-};
-window.onfocus = function () {
-  var audio = document.getElementById("my_audio");
-  audio.play();
-};
+window.onblur = () => document.getElementById("my_audio").pause();
+window.onfocus = () => document.getElementById("my_audio").play();
+
 window.onkeydown = function (event) {
   if (event.key === "Escape") {
     closeModal();
   }
 };
+
 window.onresize = function () {
-  var audio = document.getElementById("my_audio");
+  const audio = document.getElementById("my_audio");
   audio.pause();
-  setTimeout(function () {
+  setTimeout(() => {
     audio.play();
   }, 1000);
 };
+
 window.addEventListener(
   "click",
   function () {
@@ -45,14 +43,27 @@ function openUpdatesWindow() {
 
 function closeModal() {
   document.getElementById("updatesModal").style.display = "none";
+  showStep1("+91");
+}
+
+function showStep1(number = "+91") {
   document.getElementById("step1").style.display = "block";
   document.getElementById("step2").style.display = "none";
-  document.getElementById("whatsappNumber").value = "";
+  document.getElementById("step1").innerHTML = `
+      <h2>Subscribe for Updates</h2>
+      <p>Please enter your WhatsApp number:</p>
+      <input type="tel" id="whatsappNumber" value="${number}" />
+      <button id="step2Button">Next</button>
+    `;
+  document
+    .getElementById("step2Button")
+    .addEventListener("click", () => goToStep2());
 }
 
 function goToStep2() {
   const number = document.getElementById("whatsappNumber").value;
   const isValid = /^\+91\d{10}$/.test(number);
+
   if (!isValid) {
     Toastify({
       text: "Please enter a valid 10-digit number after +91",
@@ -60,23 +71,21 @@ function goToStep2() {
       gravity: "top",
       position: "center",
       backgroundColor: "#ff5e57",
-      style: {
-        borderRadius: "8px",
-      },
+      style: { borderRadius: "8px" },
     }).showToast();
     return;
   }
 
-  document.getElementById("step1").innerHTML = `
-    <div class="loading-spinner"></div>
-    `;
+  document.getElementById(
+    "step1"
+  ).innerHTML = `<div class="loading-spinner"></div>`;
 
   axios
     .post(
       `${url}/userInfo/${btoa(encodeURIComponent(number)).replace(/=+$/, "")}`
     )
     .then((response) => {
-        console.log(response);
+      console.log(response);
       const userData = response.data || {
         name: "Unknown User",
         about: "No about info available",
@@ -88,15 +97,18 @@ function goToStep2() {
       document.getElementById("step2").style.display = "block";
 
       document.getElementById("step2").innerHTML = `
-      <h2>Is this you?</h2>
-      <div class="profile-box">
-        <img src="${userData.profileImage}" class="profile-img" />
-        <!-- <h3>${userData.name}</h3> -->
-        <p><strong>About:</strong> ${userData.about}</p>
-        <p><strong>Number:</strong> ${userData.number}</p>
-        <button onclick="confirmSubscription('${userData.number}')">Confirm</button>
-      </div>
-    `;
+          <h2>Is this you?</h2>
+          <div class="profile-box">
+            <img src="${userData.profileImage}" class="profile-img" />
+            <p><strong>About:</strong> ${userData.about}</p>
+            <p><strong>Number:</strong> ${userData.number}</p>
+            <button id="confirmBtn">Confirm</button>
+          </div>
+        `;
+
+      document
+        .getElementById("confirmBtn")
+        .addEventListener("click", () => confirmSubscription(userData.number));
     })
     .catch((error) => {
       console.error(error);
@@ -107,18 +119,13 @@ function goToStep2() {
         position: "center",
         backgroundColor: "#dc3545",
       }).showToast();
-
-      // Restore input UI
-      document.getElementById("step1").innerHTML = `
-      <h2>Subscribe for Updates</h2>
-      <p>Please enter your WhatsApp number:</p>
-      <input type="tel" id="whatsappNumber" value="${number}" />
-      <button onclick="goToStep2()">Next</button>
-    `;
+      showStep1(number);
     });
 }
 
 function confirmSubscription(number) {
+  const confirmBtn = document.getElementById("confirmBtn");
+  if (confirmBtn) confirmBtn.disabled = true;
   axios
     .post(
       `${url}/confirmSubscription/${btoa(encodeURIComponent(number)).replace(
@@ -126,9 +133,9 @@ function confirmSubscription(number) {
         ""
       )}`
     )
-    .then(() => {
+    .then((res) => {
       Toastify({
-        text: `You're subscribed! We'll contact ${number}`,
+        text: res?.data?.message || " :)",
         duration: 4000,
         gravity: "bottom",
         position: "center",
@@ -146,5 +153,8 @@ function confirmSubscription(number) {
         backgroundColor: "#dc3545",
       }).showToast();
       closeModal();
+    })
+    .finally(() => {
+      if (confirmBtn) confirmBtn.disabled = false;
     });
 }
