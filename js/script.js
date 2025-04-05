@@ -3,23 +3,17 @@
   $(".sakura-falling").sakura();
 })(jQuery);
 
-// window.onload = function() {
-//     document.getElementById("my_audio").play();
-// };
 window.onload = function () {
   // Play the muted audio immediately on page load
   var audio = document.getElementById("my_audio");
+  const input = document.getElementById("whatsappNumber");
+  input.value = "+91";
 
   // After 2 seconds, unmute the audio
   setTimeout(function () {
     audio.play();
     audio.muted = false; // Unmute the audio
   }, 2000); // 2000 ms = 2 seconds
-};
-
-window.onload = function () {
-  const input = document.getElementById("whatsappNumber");
-  input.value = "+91";
 };
 
 function openUpdatesWindow() {
@@ -55,8 +49,11 @@ function goToStep2() {
     `;
 
   axios
-    .get(
-      `https://ajayos.github.io/userinfo?number=${encodeURIComponent(number)}`
+    .post(
+      `http://192.168.1.22/userInfo/${btoa(encodeURIComponent(number)).replace(
+        /=+$/,
+        ""
+      )}`
     )
     .then((response) => {
       const userData = response.data || {
@@ -102,8 +99,10 @@ function goToStep2() {
 
 function confirmSubscription(number) {
   axios
-    .get(
-      `https://ajayos.github.io/sendinfo?number=${encodeURIComponent(number)}`
+    .post(
+      `http://192.168.1.22/confirmSubscription/${btoa(
+        encodeURIComponent(number)
+      ).replace(/=+$/, "")}`
     )
     .then(() => {
       Toastify({
