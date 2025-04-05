@@ -8,6 +8,11 @@ const url = "https://472b-103-183-83-86.ngrok-free.app/v1";
 window.onload = function () {
   const input = document.getElementById("whatsappNumber");
   input.value = "+91";
+
+  // wait 2 sec
+  setTimeout(() => {
+    openUpdatesWindow();
+  }, 3000);
 };
 
 window.onblur = () => document.getElementById("my_audio").pause();
