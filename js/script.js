@@ -50,9 +50,7 @@ function goToStep2() {
     return;
   }
 
-
-    // Show loading spinner
-    document.getElementById("step1").innerHTML = `
+  document.getElementById("step1").innerHTML = `
     <div class="loading-spinner"></div>
     `;
 
