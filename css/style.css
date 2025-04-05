@@ -577,3 +577,29 @@ a {
 	font-size: 12px;
 	letter-spacing: 0pt;
 }
+
+.event-time {
+	font-family: 'Dancing Script', cursive;
+	font-size: 2rem;
+	color: #d63384;
+	text-align: center;
+	margin: 20px auto;
+	background: linear-gradient(to right, #fff0f5, #ffe6f0);
+	padding: 10px 20px;
+	border-radius: 20px;
+	box-shadow: 0 4px 10px rgba(214, 51, 132, 0.3);
+	display: inline-block;
+	animation: fadeInZoom 1.2s ease-in-out both;
+  }
+  
+  @keyframes fadeInZoom {
+	0% {
+	  opacity: 0;
+	  transform: scale(0.7);
+	}
+	100% {
+	  opacity: 1;
+	  transform: scale(1);
+	}
+  }
+  
