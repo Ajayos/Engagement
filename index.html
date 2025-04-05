@@ -51,6 +51,19 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <!-- Toastify CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Toastify JS -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
   </head>
 
   <body>
@@ -78,7 +91,7 @@
         </p>
       </div>
     </div>
-    <div id="time" class="event-time"> 11:00 AM (IST)</div>
+    <div id="time" class="event-time">11:00 AM (IST)</div>
     <p class="dance-med">Welcome to Engagement Ceremony!</p>
     <div class="actions">
       <a href="https://maps.app.goo.gl/qaZey8jEadn3Ha8z5" target="_blank">
@@ -87,6 +100,31 @@
       <a href="javascript:void(0)" onclick="openUpdatesWindow()">
         <div class="venue">MORE UPDATES</div>
       </a>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="updatesModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <div id="step1">
+          <h2>Subscribe for Updates</h2>
+          <p>Please enter your WhatsApp number:</p>
+          <input type="tel" id="whatsappNumber" placeholder="+91 9876543210" />
+          <button onclick="goToStep2()">Next</button>
+        </div>
+
+        <div id="step2" style="display: none">
+          <h2>Is this you?</h2>
+          <img
+            src="./assets/img/profile.jpg"
+            alt="Profile"
+            class="profile-img"
+          />
+          <p id="numberPreview"></p>
+          <button onclick="confirmSubscription()">Confirm</button>
+        </div>
+      </div>
     </div>
 
     <div class="music">
