@@ -15,6 +15,12 @@ window.onload = function () {
     audio.muted = false; // Unmute the audio
   }, 2000); // 2000 ms = 2 seconds
 };
+window.addEventListener("click", function () {
+    const audio = document.getElementById("my_audio");
+    audio.muted = false;
+    audio.play().catch((err) => console.warn("Audio play blocked:", err));
+  }, { once: true });
+  
 
 function openUpdatesWindow() {
   document.getElementById("updatesModal").style.display = "block";
